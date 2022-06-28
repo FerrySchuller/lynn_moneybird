@@ -12,7 +12,7 @@ git:
 	#git rm --cached -r .
 	git add -A .
 	git commit -m "$(commit)"
-	git push -u origin master
+	git push -u origin main
 
 .PHONY: pull
 pull:
