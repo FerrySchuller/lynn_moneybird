@@ -1,4 +1,5 @@
 ### CLI to https://developer.moneybird.com
+### Gemaakt door https://lynn-vastgoed.nl
 
 Exampes:
 
