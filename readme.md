@@ -1,7 +1,12 @@
 ### CLI to https://developer.moneybird.com
 
+Exampes:
+```
+$ python app.py api GET users.json
+```
 
-Requirement
+
+Requirement:
 
 ```
 $ cat .env 
