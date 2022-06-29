@@ -8,7 +8,7 @@ from dateutil.parser import parse
 from pprint import pprint
 
 
-prod=False
+prod=True
 
 if prod:
     mb_bearer = os.getenv('mb_bearer')
