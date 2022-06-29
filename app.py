@@ -17,6 +17,9 @@ else:
     mb_bearer = os.getenv('schaduw_mb_bearer')
     mb_administration = os.getenv('schaduw_mb_administration')
 
+if not mb_bearer or not mb_administration:
+    print('Please create .env\nSee https://github.com/FerrySchuller/lynn_moneybird')
+    sys.exit(1)
 
 
 class bcolors:
@@ -119,8 +122,6 @@ def tijdschrijven(description, user_id, project_id, contact_id, started_at, ende
     d['time_entry']['contact_id'] = contact_id
     d['time_entry']['started_at'] = str(started_at)
     d['time_entry']['ended_at'] = str(ended_at)
-    pprint(d)
-
 
     base_url = "https://moneybird.com/api/v2/{}".format(mb_administration)
     url = "{}/{}".format(base_url, 'time_entries')
