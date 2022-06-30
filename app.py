@@ -3,12 +3,13 @@ load_dotenv(find_dotenv())
 
 import requests
 import os, sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import pytz
 from dateutil.parser import parse
 from pprint import pprint
 
-
-prod=True
+tz = pytz.timezone('Europe/Amsterdam')
+prod=False
 
 if prod:
     mb_bearer = os.getenv('mb_bearer')
@@ -20,6 +21,14 @@ else:
 if not mb_bearer or not mb_administration:
     print('Please create .env\nSee https://github.com/FerrySchuller/lynn_moneybird')
     sys.exit(1)
+
+
+def get_headers():
+    headers = {}
+    headers['Content-Type'] = "application/json"
+    headers['Authorization'] = "Bearer {}".format(mb_bearer)
+    headers['Time-Zone'] = 'Europe/Amsterdam'
+    return headers
 
 
 class bcolors:
@@ -36,9 +45,7 @@ class bcolors:
 
 def mb_connect(method, endpoint):
     ref = False
-    headers = {}
-    headers['Content-Type'] = "application/json"
-    headers['Authorization'] = "Bearer {}".format(mb_bearer)
+    headers = get_headers()
     base_url = "https://moneybird.com/api/v2/{}".format(mb_administration)
     url = "{}/{}".format(base_url, endpoint)
 
@@ -110,9 +117,7 @@ def tijd(description, username, projectname, contactname, start, end):
 
 def tijdschrijven(description, user_id, project_id, contact_id, started_at, ended_at):
 
-    headers = {}
-    headers['Content-Type'] = "application/json"
-    headers['Authorization'] = "Bearer {}".format(mb_bearer)
+    headers = get_headers()
 
     d = {}
     d['time_entry'] = {}
@@ -130,7 +135,8 @@ def tijdschrijven(description, user_id, project_id, contact_id, started_at, ende
     if r and r.ok and r.json:
         pprint(r.json())
     else:
-        pprint(vars(r))
+        print(r.status_code)
+        print(r.json())
 
 
 def dev():
@@ -149,8 +155,8 @@ if __name__ == '__main__':
     if 'tijd' in args:
         print('example')
         print("python app tijd <omschrijving> <user_id> <project_id> <contact_id> <started_at> <ended_at>")
-        now = datetime.now().isoformat(' ', 'seconds')
-        print('python app.py tijd "stucen" "Ferry Schuller" Heutsz Andrzej "{0} GMT-2" "{0} GMT-2"\n'.format(now))
+        now = datetime.now(tz).isoformat(' ', 'seconds')
+        print('python app.py tijd "Niet opgegeven" "Ferry Schuller" Heutsz Andrzej "{0}" "{0}"\n'.format(now))
         if len(args) == 7:
             tijd(description=args[1], username=args[2], projectname=args[3], contactname=args[4], start=args[5], end=args[6])
 
